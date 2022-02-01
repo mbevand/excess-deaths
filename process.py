@@ -116,7 +116,8 @@ def chart(res, last):
     rcParams['font.family'] = ['serif']
     rcParams['font.serif'] = ['Latin Modern Math']
     (fig, ax) = plt.subplots(dpi=300, figsize=(6, 12))
-    ax.barh([_[0] for _ in res], [_[1] for _ in res], color=tableau20[6])
+    ax.barh([f'{51 - i}. {x[0]}' for (i, x) in enumerate(res)],
+            [_[1] for _ in res], color=tableau20[6])
     for (i, (s, e)) in enumerate(res):
         ax.text(e + 50, i - .07, f'{e:,.0f}', va='center')
     ax.set_ylim(bottom=-1, top=51)
