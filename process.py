@@ -108,11 +108,11 @@ def excess_for(df, state):
 def chart(res, last):
     # "Tableau 20" colors
     tableau20 = [(x[0] / 255., x[1] / 255., x[2] / 255.) for x in
-                 [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
-                  (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),
-                  (148, 103, 189), (197, 176, 213), (140, 86, 75), (196, 156, 148),
-                  (227, 119, 194), (247, 182, 210), (127, 127, 127), (199, 199, 199),
-                  (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]]
+        [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
+        (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),
+        (148, 103, 189), (197, 176, 213), (140, 86, 75), (196, 156, 148),
+        (227, 119, 194), (247, 182, 210), (127, 127, 127), (199, 199, 199),
+        (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]]
     rcParams['font.family'] = ['serif']
     rcParams['font.serif'] = ['Latin Modern Math']
     (fig, ax) = plt.subplots(dpi=300, figsize=(6, 12))
@@ -126,14 +126,14 @@ def chart(res, last):
     ax.spines['right'].set_visible(False)
     ax.tick_params(axis='y', which='both', left=False)
     ax.set_xlabel('Excess deaths per million people')
-    ax.set_title(f'Cumulative Excess Deaths per Capita,\n'
-            'After First 8 Weeks of the Pandemic', fontsize='x-large')
-    fig.text(0, .06,
-            f'Excess deaths data from US CDC, from week starting {start_date} up '
-            f'to week ending {last}.\n'
+    ax.set_title(f'Cumulative Excess Deaths per Capita\n'
+            f'After {start_date}', fontsize='x-large')
+    fig.text(-.01, .06,
+            f'Excess deaths data from US CDC, from week starting {start_date} '
+            f'up to week ending {last}.\n'
             'Population data from US Census Bureau 2019 estimates.\n'
             'Created by: Marc Bevand — @zorinaq',
-            fontsize='small', va='top', ha='left',
+            va='top', ha='left',
             bbox=dict(facecolor='white', edgecolor='none'))
     fig.savefig('e.png', bbox_inches='tight')
 
