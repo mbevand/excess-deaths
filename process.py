@@ -127,9 +127,9 @@ def chart(res, last):
     ax.spines['right'].set_visible(False)
     ax.tick_params(axis='y', which='both', left=False)
     ax.set_xlabel('Excess deaths per million people')
-    ax.set_title(f'Cumulative Excess Deaths per Capita\n'
-            f'After {start_date}', fontsize='x-large')
-    fig.text(-.01, .06,
+    ax.set_title(f'Cumulative Excess Deaths per Capita\nSince {start_date}',
+            fontsize='x-large', x=.35)
+    fig.text(-.09, .06,
             f'Excess deaths data from US CDC, from week starting {start_date} '
             f'up to week ending {last}.\n'
             'Population data from US Census Bureau 2019 estimates.\n'
