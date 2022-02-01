@@ -7,7 +7,7 @@ the first 8 weeks of the COVID-19 pandemic in order to focus on
 long-term excess deaths.
 
 Long-term excess deaths are defined as deaths after 2020-04-26, roughly the
-second half, of the first wave (Spring 2020), plus all deaths from subsequent
+second half of the first wave (Spring 2020), plus all deaths from subsequent
 waves.
 
 Long-term excess deaths are an indirect result of each state's long-term plan
