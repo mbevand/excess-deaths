@@ -14,6 +14,9 @@ weighted = True
 # deaths ('Average Expected Count')
 baseline = 'Average Expected Count'
 
+# Do age adjustment or not
+do_age_adjust = True
+
 # Calculate excess deaths since the week starting on... (must be a Sunday)
 start_date = sys.argv[1] if len(sys.argv) > 1 else '2020-04-26'
 
@@ -161,8 +164,10 @@ def excess_for(df, state):
     return ret + _excess_for(df, state)
 
 def age_adjust(state):
-    # The IFR of COVID-19 increases approximately 1.115-fold with each year of increase
-    # in age
+    if not do_age_adjust:
+        return 1
+    # The IFR of COVID-19 increases approximately 1.115-fold with each year of
+    # increase in age
     ifr_inc = 1.115
     return ifr_inc**(40 - age[state])
 
@@ -188,16 +193,18 @@ def chart(res, last):
     ax.spines['right'].set_visible(False)
     ax.tick_params(axis='y', which='both', left=False)
     ax.set_xlabel('Excess deaths per million people')
-    ax.set_title(f'Cumulative Excess Deaths per Capita (Age-Adjusted)\nSince {start_date}',
-            fontsize='x-large', x=.35)
+    xtra = ' (Age-Adjusted)' if do_age_adjust else ''
+    ax.set_title(f'Cumulative Excess Deaths per Capita{xtra}\n'
+            f'Since {start_date}', fontsize='x-large', x=.35)
+    xtra = 'Age-adjustment is performed by normalizing each state\'s '\
+            'excess deaths to what they would be\nassuming population '\
+            'pyramid is shifted to a median age of 40.' if do_age_adjust else ''
     fig.text(-.09, .06,
-            f'Excess deaths data from US CDC, from week starting {start_date} '
+            'Source: https://github.com/mbevand/excess-deaths  '
+            'Created by: Marc Bevand — @zorinaq\n'
+            f'Excess mortality calculated from week starting {start_date} '
             f'up to week ending {last}.\n'
-            'Excess deaths are age-adjusted by normalizing each state\'s excess '
-            'death to what it would be\n'
-            'assuming a median age of 40. '
-            'Population data from US Census Bureau 2019 estimates.\n'
-            'Created by: Marc Bevand — @zorinaq',
+            f'{xtra}',
             va='top', ha='left',
             bbox=dict(facecolor='white', edgecolor='none'))
     fig.savefig('e.png', bbox_inches='tight')
