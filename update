@@ -1,0 +1,4 @@
+#!/bin/sh
+
+curl https://data.cdc.gov/api/views/xkkf-xrst/rows.csv?accessType=DOWNLOAD >data.csv
+curl https://data.cdc.gov/api/views/9bhg-hcku/rows.csv?accessType=DOWNLOAD >Provisional_COVID-19_Deaths_by_Sex_and_Age.csv
