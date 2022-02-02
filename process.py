@@ -76,60 +76,61 @@ pop = {
         'Wisconsin':5822434,
         'Wyoming':578759,
 }
-# U.S. Census Bureau’s median age estimates for US states and DC, as of 2019.
-# https://www.statsamerica.org/sip/rank_list.aspx?rank_label=pop46&ct=S09
-age = {
-        'Alabama': 39.5,
-        'Alaska': 35.3,
-        'Arizona': 38.5,
-        'Arkansas': 38.6,
-        'California': 37.3,
-        'Colorado': 37.3,
-        'Connecticut': 41.2,
-        'Delaware': 41.4,
-        'District of Columbia': 34.4,
-        'Florida': 42.7,
-        'Georgia': 37.3,
-        'Hawaii': 40.0,
-        'Idaho': 37.2,
-        'Illinois': 38.8,
-        'Indiana': 38.0,
-        'Iowa': 38.6,
-        'Kansas': 37.3,
-        'Kentucky': 39.2,
-        'Louisiana': 37.8,
-        'Maine': 45.0,
-        'Maryland': 39.2,
-        'Massachusetts': 39.7,
-        'Michigan': 40.1,
-        'Minnesota': 38.5,
-        'Mississippi': 38.3,
-        'Missouri': 39.1,
-        'Montana': 40.2,
-        'Nebraska': 36.9,
-        'Nevada': 38.5,
-        'New Hampshire': 43.1,
-        'New Jersey': 40.2,
-        'New Mexico': 38.6,
-        'New York': 39.4,
-        'North Carolina': 39.2,
-        'North Dakota': 35.4,
-        'Ohio': 39.6,
-        'Oklahoma': 37.1,
-        'Oregon': 39.9,
-        'Pennsylvania': 40.9,
-        'Rhode Island': 40.3,
-        'South Carolina': 40.1,
-        'South Dakota': 37.6,
-        'Tennessee': 39.1,
-        'Texas': 35.2,
-        'Utah': 31.5,
-        'Vermont': 43.0,
-        'Virginia': 38.7,
-        'Washington': 37.9,
-        'West Virginia': 43.0,
-        'Wisconsin': 40.0,
-        'Wyoming': 38.7,
+
+# Mean age of COVID deaths per state, from calc_age_of_deaths.py
+mean_age_of_covid_deaths = {
+  # Data as of 02/02/2022
+  'Alaska': 68.34178966789668,
+  'Hawaii': 68.86920384951881,
+  'District of Columbia': 69.4120260663507,
+  'Texas': 69.77048197876437,
+  'New Mexico': 69.77611940298507,
+  'Nevada': 70.55204635623303,
+  'Georgia': 70.819417646027,
+  'Utah': 71.06218792555606,
+  'Mississippi': 71.10283873214908,
+  'Alabama': 71.16428022010533,
+  'Arizona': 71.28610181936853,
+  'Louisiana': 71.49201244080017,
+  'Tennessee': 71.53674313150174,
+  'California': 72.0213282905052,
+  'South Carolina': 72.43555114879649,
+  'Oklahoma': 72.56206202475026,
+  'Arkansas': 72.74416461916462,
+  'Florida': 72.85448518252257,
+  'North Carolina': 73.10407133387504,
+  'Kentucky': 73.2652649346837,
+  'Washington': 73.39714642582629,
+  'West Virginia': 73.51073591484676,
+  'Oregon': 73.73815566835871,
+  'Wyoming': 73.89344262295081,
+  'Michigan': 73.94847208687177,
+  'Colorado': 74.03740680435341,
+  'Montana': 74.15531982267258,
+  'Missouri': 74.39512072434607,
+  'Maryland': 74.39806140098011,
+  'Idaho': 74.46816857206905,
+  'Virginia': 74.51392229973538,
+  'Illinois': 74.87844972790879,
+  'Kansas': 74.9191400304414,
+  'Delaware': 75.10275339185954,
+  'New York': 75.14926272347988,
+  'Indiana': 75.180810488677,
+  'New Jersey': 75.21695672624647,
+  'Nebraska': 75.2907514450867,
+  'Ohio': 75.34768699469936,
+  'Maine': 75.8846518237802,
+  'Wisconsin': 76.05126945745806,
+  'South Dakota': 76.10080793242747,
+  'North Dakota': 76.41914191419141,
+  'Pennsylvania': 76.51833937444489,
+  'Minnesota': 77.05173008887738,
+  'Iowa': 77.07603181922988,
+  'Vermont': 77.21774193548387,
+  'Connecticut': 78.11192201694396,
+  'New Hampshire': 78.20733363512902,
+  'Massachusetts': 78.72602616956443,
+  'Rhode Island': 78.74841571609632,
 }
 
 def excess_for(df, state):
@@ -170,7 +171,7 @@ def age_adjust(state):
     # The IFR of COVID-19 increases approximately 1.115-fold with each year of
     # increase in age
     ifr_inc = 1.115
-    return ifr_inc**(40 - age[state])
+    return ifr_inc**(74 - mean_age_of_covid_deaths[state])
 
 def chart(res, last):
     # "Tableau 20" colors
@@ -198,8 +199,8 @@ def chart(res, last):
     ax.set_title(f'Cumulative Excess Deaths per Capita{xtra}\n'
             f'Since {start_date}', fontsize='x-large', x=.35)
     xtra = 'Age-adjustment is performed by normalizing each state\'s '\
-            'excess deaths to what they would be\nassuming population '\
-            'pyramid is shifted to a median age of 40.' if do_age_adjust else ''
+            'excess deaths to what they would be\nif the mean '\
+            'age of COVID deaths was 74.' if do_age_adjust else ''
     fig.text(-.09, .06,
             'Source: https://github.com/mbevand/excess-deaths  '
             'Created by: Marc Bevand — @zorinaq\n'

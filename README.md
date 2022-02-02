@@ -1,4 +1,4 @@
-*Updated: 01 Feb 2022*
+*Updated: 02 Feb 2022*
 
 Author: Marc Bevand
 
@@ -33,7 +33,7 @@ deaths and the average expected number of deaths from the US CDC (column
 We add up these differences to calculate the final cumulative excess deaths
 per capita.
 
-Then we perform age-adjustment. First we determine by how much the IFR of COVID-19
+Then we perform age-adjustment. Firstly we determine by how much the IFR of COVID-19
 increases with each year of age. As per [O’Driscoll et al.: Age-specific mortality and immunity patterns of SARS-CoV-2](https://www.nature.com/articles/s41586-020-2918-0), in [Supplementary information](https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-020-2918-0/MediaObjects/41586_2020_2918_MOESM1_ESM.pdf) (table S3):
 
 * IFR for ages 30-34 = 0.024%
@@ -42,10 +42,13 @@ increases with each year of age. As per [O’Driscoll et al.: Age-specific morta
 On this 45-year range, the IFR increases by: (3.203 / 0.024)^(1 / 45) =
 1.115-fold with each year of increase. We term this factor **ifr_inc**.
 
-Secondly, each state is adjusted by normalizing its
-excess deaths to what it would be if the median age was 40 (an arbitrary
-value). We do this by mutiplying excess death by:
+Secondly, for each state, we determine the mean age of COVID deaths.
+This is calculated from the [CDC dataset "Provisional COVID-19 Deaths by Sex and Age"](https://data.cdc.gov/NCHS/Provisional-COVID-19-Deaths-by-Sex-and-Age/9bhg-hcku) by the script [calc_age_of_deaths.py](calc_age_of_deaths.py).
 
-ifr_inc ^ (40 - state_median_age)
+Thirdly, each state is adjusted by normalizing its excess deaths to what it
+would be if the mean age of COVID deaths was 74 (an arbitrary value).
+Concretely, excess deaths are simply mutiplied by:
 
-States population and median age data is from the [US Census Bureau 2019 estimates](https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/state/detail/SCPRC-EST2019-18+POP-RES.csv).
+ifr_inc ^ (74 - mean_age_of_covid_deaths)
+
+Finally, to calculates excess mortality "per capita", states population is obtained from the [US Census Bureau 2019 estimates](https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/state/detail/SCPRC-EST2019-18+POP-RES.csv).
