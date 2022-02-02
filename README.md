@@ -56,4 +56,4 @@ Concretely, excess deaths are simply mutiplied by:
 
 ifr_inc ^ (74 - mean_age_of_covid_deaths)
 
-Finally, to calculates excess mortality "per capita", states population is obtained from the [US Census Bureau 2019 estimates](https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/state/detail/SCPRC-EST2019-18+POP-RES.csv).
+Finally, to calculates excess mortality per capita, we use states population from the [US Census Bureau 2019 estimates](https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/state/detail/SCPRC-EST2019-18+POP-RES.csv).
