@@ -160,8 +160,9 @@ def excess_for(df, state):
         return cum_excess
     # For some reason the CDC splits NY state into the city ('New York City')
     # and the rest of the state ('New York')
-    ret = _excess_for(df, 'New York City') if state == 'New York' else 0
-    return ret + _excess_for(df, state)
+    ret = _excess_for(df, state)
+    ret += _excess_for(df, 'New York City') if state == 'New York' else 0
+    return ret
 
 def age_adjust(state):
     if not do_age_adjust:
