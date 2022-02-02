@@ -17,6 +17,11 @@ and measures against the pandemic.
 
 ![Cumulative excess deaths for each US state](e.png)
 
+For comparison, here is the same chart, same methodology, but counting all
+excess deaths since the beginning of the pandemic:
+
+![Cumulative excess deaths for each US state](eall.png)
+
 ## Methodology
 
 We take [deaths reported by the US
