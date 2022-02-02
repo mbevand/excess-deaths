@@ -73,6 +73,61 @@ pop = {
         'Wisconsin':5822434,
         'Wyoming':578759,
 }
+# U.S. Census Bureau’s median age estimates for US states and DC, as of 2019.
+# https://www.statsamerica.org/sip/rank_list.aspx?rank_label=pop46&ct=S09
+age = {
+        'Alabama': 39.5,
+        'Alaska': 35.3,
+        'Arizona': 38.5,
+        'Arkansas': 38.6,
+        'California': 37.3,
+        'Colorado': 37.3,
+        'Connecticut': 41.2,
+        'Delaware': 41.4,
+        'District of Columbia': 34.4,
+        'Florida': 42.7,
+        'Georgia': 37.3,
+        'Hawaii': 40.0,
+        'Idaho': 37.2,
+        'Illinois': 38.8,
+        'Indiana': 38.0,
+        'Iowa': 38.6,
+        'Kansas': 37.3,
+        'Kentucky': 39.2,
+        'Louisiana': 37.8,
+        'Maine': 45.0,
+        'Maryland': 39.2,
+        'Massachusetts': 39.7,
+        'Michigan': 40.1,
+        'Minnesota': 38.5,
+        'Mississippi': 38.3,
+        'Missouri': 39.1,
+        'Montana': 40.2,
+        'Nebraska': 36.9,
+        'Nevada': 38.5,
+        'New Hampshire': 43.1,
+        'New Jersey': 40.2,
+        'New Mexico': 38.6,
+        'New York': 39.4,
+        'North Carolina': 39.2,
+        'North Dakota': 35.4,
+        'Ohio': 39.6,
+        'Oklahoma': 37.1,
+        'Oregon': 39.9,
+        'Pennsylvania': 40.9,
+        'Rhode Island': 40.3,
+        'South Carolina': 40.1,
+        'South Dakota': 37.6,
+        'Tennessee': 39.1,
+        'Texas': 35.2,
+        'Utah': 31.5,
+        'Vermont': 43.0,
+        'Virginia': 38.7,
+        'Washington': 37.9,
+        'West Virginia': 43.0,
+        'Wisconsin': 40.0,
+        'Wyoming': 38.7,
+}
 
 def excess_for(df, state):
     def _excess_for(df, state):
@@ -105,6 +160,12 @@ def excess_for(df, state):
     ret = _excess_for(df, 'New York City') if state == 'New York' else 0
     return ret + _excess_for(df, state)
 
+def age_adjust(state):
+    # The IFR of COVID-19 increases approximately 1.115-fold with each year of increase
+    # in age
+    ifr_inc = 1.115
+    return ifr_inc**(40 - age[state])
+
 def chart(res, last):
     # "Tableau 20" colors
     tableau20 = [(x[0] / 255., x[1] / 255., x[2] / 255.) for x in
@@ -127,11 +188,14 @@ def chart(res, last):
     ax.spines['right'].set_visible(False)
     ax.tick_params(axis='y', which='both', left=False)
     ax.set_xlabel('Excess deaths per million people')
-    ax.set_title(f'Cumulative Excess Deaths per Capita\nSince {start_date}',
+    ax.set_title(f'Cumulative Excess Deaths per Capita (Age-Adjusted)\nSince {start_date}',
             fontsize='x-large', x=.35)
     fig.text(-.09, .06,
             f'Excess deaths data from US CDC, from week starting {start_date} '
             f'up to week ending {last}.\n'
+            'Excess deaths are age-adjusted by normalizing each state\'s excess '
+            'death to what it would be\n'
+            'assuming a median age of 40. '
             'Population data from US Census Bureau 2019 estimates.\n'
             'Created by: Marc Bevand — @zorinaq',
             va='top', ha='left',
@@ -157,7 +221,7 @@ def main():
     res = []
     for st in pop.keys():
         # calculate cumulative excess deaths per million capita
-        res.append((st, excess_for(df, st) / pop[st] * 1e6))
+        res.append((st, excess_for(df, st) / pop[st] * 1e6 * age_adjust(st)))
     res = sorted(res, key=lambda x: x[1])
     for x in res:
         print(f'{x[1]:.0f} {x[0]}')
