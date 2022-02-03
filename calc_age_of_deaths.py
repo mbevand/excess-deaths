@@ -50,7 +50,6 @@ def main():
     df = df[df['Group'] == 'By Total']
     df = df[df['Sex'] == 'All Sexes']
     df = df[df['State'] != 'United States']
-    df = df[df['State'] != 'Puerto Rico']
     for state in set(df['State']):
         calc_state(state, df)
     as_of = list(set(df['Data As Of']))
