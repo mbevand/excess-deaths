@@ -41,11 +41,12 @@ per capita.
 Then we perform age-adjustment. Firstly we determine by how much the IFR of COVID-19
 increases with each year of age. As per [O’Driscoll et al.: Age-specific mortality and immunity patterns of SARS-CoV-2](https://www.nature.com/articles/s41586-020-2918-0), in [Supplementary information](https://static-content.springer.com/esm/art%3A10.1038%2Fs41586-020-2918-0/MediaObjects/41586_2020_2918_MOESM1_ESM.pdf) (table S3):
 
-* IFR for ages 30-34 = 0.024%
+* IFR for ages 65-69 = 1.075%
 * IFR for ages 75-79 = 3.203%
 
-On this 45-year range, the IFR increases by: (3.203 / 0.024)^(1 / 45) =
-1.115-fold with each year of increase. We term this factor **ifr_inc**.
+On this 10-year range, which spans the approximate mean age of COVID death
+among the states (68 to 79 years), the IFR increases by: (3.203 / 1.075) ^ (1 /
+10) = 1.115-fold with each year of age. We term this factor **ifr_inc**.
 
 Secondly, for each state, we determine the mean age of COVID deaths.
 This is calculated from the [CDC dataset "Provisional COVID-19 Deaths by Sex and Age"](https://data.cdc.gov/NCHS/Provisional-COVID-19-Deaths-by-Sex-and-Age/9bhg-hcku) by the script [calc_age_of_deaths.py](calc_age_of_deaths.py).

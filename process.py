@@ -202,7 +202,7 @@ def chart(res, last):
             f'Since {start_date}', fontsize='x-large', x=.35)
     xtra = 'Age-adjustment is performed by normalizing each state\'s '\
             'excess deaths to what they would be\nif the mean '\
-            'age of COVID deaths was 74.' if do_age_adjust else ''
+            'age of COVID deaths was 74 in all states.' if do_age_adjust else ''
     fig.text(-.09, .06,
             'Source: https://github.com/mbevand/excess-deaths  '
             'Created by: Marc Bevand — @zorinaq\n'
