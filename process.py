@@ -135,6 +135,60 @@ mean_age_of_covid_deaths = {
   'Massachusetts': 78.68565153733529,
 }
 
+# Party of governors, as of 01-Jan-2022
+party = {
+  'Alabama': 'republican',
+  'Alaska': 'republican',
+  'Arizona': 'republican',
+  'Arkansas': 'republican',
+  'California': 'democrat',
+  'Colorado': 'democrat',
+  'Connecticut': 'democrat',
+  'Delaware': 'democrat',
+  'Florida': 'republican',
+  'Georgia': 'republican',
+  'Hawaii': 'democrat',
+  'Idaho': 'republican',
+  'Illinois': 'democrat',
+  'Indiana': 'republican',
+  'Iowa': 'republican',
+  'Kansas': 'democrat',
+  'Kentucky': 'democrat',
+  'Louisiana': 'democrat',
+  'Maine': 'democrat',
+  'Maryland': 'republican',
+  'Massachusetts': 'republican',
+  'Michigan': 'democrat',
+  'Minnesota': 'democrat',
+  'Mississippi': 'republican',
+  'Missouri': 'republican',
+  'Montana': 'republican',
+  'Nebraska': 'republican',
+  'Nevada': 'democrat',
+  'New Hampshire': 'republican',
+  'New Jersey': 'democrat',
+  'New Mexico': 'democrat',
+  'New York': 'democrat',
+  'North Carolina': 'democrat',
+  'North Dakota': 'republican',
+  'Ohio': 'republican',
+  'Oklahoma': 'republican',
+  'Oregon': 'democrat',
+  'Pennsylvania': 'democrat',
+  'Rhode Island': 'democrat',
+  'South Carolina': 'republican',
+  'South Dakota': 'republican',
+  'Tennessee': 'republican',
+  'Texas': 'republican',
+  'Utah': 'republican',
+  'Vermont': 'republican',
+  'Virginia': 'democrat',
+  'Washington': 'democrat',
+  'West Virginia': 'republican',
+  'Wisconsin': 'democrat',
+  'Wyoming': 'republican',
+}
+
 def excess_for(df, state):
     def _excess_for(df, state):
         if weighted:
@@ -176,6 +230,7 @@ def age_adjust(state):
     return ifr_inc**(74 - mean_age_of_covid_deaths[state])
 
 def chart(res, last):
+    # res is an array of (state, excess_per_M) tuples
     # "Tableau 20" colors
     tableau20 = [(x[0] / 255., x[1] / 255., x[2] / 255.) for x in
         [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
@@ -186,8 +241,16 @@ def chart(res, last):
     rcParams['font.family'] = ['serif']
     rcParams['font.serif'] = ['Latin Modern Math']
     (fig, ax) = plt.subplots(dpi=300, figsize=(6, 12))
+    colors = []
+    for (state, _) in res:
+        if state not in party:
+            colors.append((.1, .1, .1))
+        elif party[state] == 'democrat':
+            colors.append(tableau20[0])
+        elif party[state] == 'republican':
+            colors.append(tableau20[6])
     ax.barh([f'{len(pop) - i}. {x[0]}' for (i, x) in enumerate(res)],
-            [_[1] for _ in res], color=tableau20[6])
+            [_[1] for _ in res], color=colors)
     for (i, (s, e)) in enumerate(res):
         ax.text(e + 50, i - .07, f'{e:,.0f}', va='center')
     ax.set_ylim(bottom=-1, top=len(pop))
@@ -206,6 +269,8 @@ def chart(res, last):
     fig.text(-.09, .06,
             'Source: https://github.com/mbevand/excess-deaths  '
             'Created by: Marc Bevand — @zorinaq\n'
+            'Colors represent party of state governor as of 2022-01-01 '
+            '(blue for democrat, red for republican)\n'
             f'Excess mortality calculated from week starting {start_date} '
             f'up to week ending {last}.\n'
             f'{xtra}',
