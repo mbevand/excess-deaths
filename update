@@ -1,6 +1,9 @@
 #!/bin/sh
 
-curl https://data.cdc.gov/api/views/xkkf-xrst/rows.csv?accessType=DOWNLOAD >data.csv
-curl https://data.cdc.gov/api/views/9bhg-hcku/rows.csv?accessType=DOWNLOAD >Provisional_COVID-19_Deaths_by_Sex_and_Age.csv
-./process.py 2020-02-02 && mv e.png eall.png
-./process.py
+curl https://data.cdc.gov/api/views/xkkf-xrst/rows.csv?accessType=DOWNLOAD >data.csv &&
+curl https://data.cdc.gov/api/views/9bhg-hcku/rows.csv?accessType=DOWNLOAD >Provisional_COVID-19_Deaths_by_Sex_and_Age.csv &&
+mv eall.png eall.old.png &&
+mv e.png e.old.png &&
+./process.py 2020-02-02 && mv e.png eall.png &&
+./process.py &&
+: || exit 1
