@@ -1,6 +1,6 @@
 #!/bin/sh
 
-curl https://data.cdc.gov/api/views/xkkf-xrst/rows.csv?accessType=DOWNLOAD >data.csv &&
+curl https://data.cdc.gov/api/views/xkkf-xrst/rows.csv?accessType=DOWNLOAD >Excess_Deaths_Associated_with_COVID-19.csv &&
 mv eall.png eall.old.png &&
 mv e.png e.old.png &&
 ./process.py 2020-02-02 && mv e.png eall.png &&
