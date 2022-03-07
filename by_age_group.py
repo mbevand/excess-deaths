@@ -271,7 +271,7 @@ def chart_group(group, l):
     ax.tick_params(axis='y', which='both', left=False)
     ax.set_xlabel('Excess deaths per million people')
     ax.set_title(f'Cumulative Excess Deaths per Capita\n'
-            f'For Age Group {group}',
+            f'For Age Group "{group}"',
             fontsize='x-large', x=.35)
     for sp in ax.spines:
         ax.spines[sp].set_visible(False)
@@ -284,7 +284,7 @@ def chart_group(group, l):
             f'up to week ending {all_weeks_info[all_weeks[-1]]["end"]}',
             va='top', ha='left',
             bbox=dict(facecolor='white', edgecolor='none'))
-    fig.savefig(f'by_age_group_{group}.png', bbox_inches='tight')
+    fig.savefig(f'by_age_group.{group}.png', bbox_inches='tight')
 
 def chart():
     for g in my_excess.keys():
