@@ -39,5 +39,8 @@ per capita.
 
 ### Population
 
-To calculate excess mortality per capita, we use states population from the [US
+In `all_ages.py`, to calculate excess mortality per capita, we use states population from the [US
 Census Bureau 2019 estimates](https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/state/detail/SCPRC-EST2019-18+POP-RES.csv).
+
+In `by_age_group.py` we use state population from the [US
+Census Bureau 2020 estimates](https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-state-detail.html), file [Single Year of Age and Sex for the Civilian Population](https://www2.census.gov/programs-surveys/popest/datasets/2010-2020/state/asrh/SC-EST2020-AGESEX-CIV.csv)
