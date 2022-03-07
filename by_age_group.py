@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, json, time
+import os, json, time, math
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -23,13 +23,19 @@ pandemic_start_week = (2020, 6)
 # of these rows, we assume 5 deaths (mean of 0-10)
 suppressed_mean = 5
 
+# If we calculate the absolute excess deaths for a particular age group for a
+# particular state to be less than threshold, we ignore it and assume zero
+# excess. This typically occurs when there are so few deaths that many
+# rows in Weekly_Counts_of_Deaths_by_Jurisdiction_and_Age.csv are suppressed.
+threshold = 10
+
 # all_weeks is an array of the MMWR weeks (yyyy, mm): [(2015, 1), (2015, 2), ...]
 # all_weeks_info maps an MMWR week (yyyy, mm) to its index in all_weeks[] and the saturday ending it:
 #   { (2015, 1): {'idx': 0, 'end': '01/10/2015'}, ... }
 all_weeks = []
 all_weeks_info = {}
 # my_excess contains our estimates of excess deaths; it maps an age group
-# like "75-84 years" to a 4-tuple:
+# like "75-84 years" to an array of 4-tuple:
 # (excess_per_1M, observed_deaths, expected_deaths, jurisdiction)
 my_excess = None
 # cdc_excess maps state names to the CDC's estimate of total number of excess deaths
@@ -160,6 +166,9 @@ def analyze_group(res, df, jurisdiction, group):
         debug(f' obs {obs} exp {exp} excess {obs-exp}')
         total_obs += obs
         total_exp += exp
+    if abs(total_obs - total_exp) < threshold:
+        print(f'Ignoring {jurisdiction}/{group}: {total_obs - total_exp} excess deaths')
+        return 0, 0
     add_my(res, group, total_obs, total_exp, jurisdiction)
     print(f'{(total_obs / total_exp - 1) * 100:.2f}% {jurisdiction} {group} {total_obs} {total_exp}')
     return total_obs, total_exp
@@ -263,9 +272,17 @@ def chart_group(group, l):
     ys = [_[0] for _ in l]
     states = [f'{len(ys) - i}. ' + _[3] for (i, _) in enumerate(l)]
     colors = list(map(colname, [_[3] for _ in l]))
+    missing = set(pop.keys()) - set([_[3] for _ in l])
+    if missing:
+        ys = [math.nan] * len(missing) + ys
+        states = list(missing) + states
+        colors = ['black'] * len(missing) + colors
     ax.barh(states, ys, color=colors)
     for (i, y) in enumerate(ys):
-        ax.text(max(y, 0), i - .07, f' {y:,.0f}', va='center')
+        if math.isnan(y):
+            ax.text(0, i - .07, f'N/A (insufficient data)', va='center')
+        else:
+            ax.text(max(y, 0), i - .07, f' {y:,.0f}', va='center')
     ax.set_ylim(bottom=-1, top=len(ys))
     ax.set_xlim(left=min([0] + ys))
     ax.tick_params(axis='y', which='both', left=False)
