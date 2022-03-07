@@ -1,8 +1,10 @@
 #!/bin/sh
 
+echo Update CDC Excess Deaths
+d="$(dirname "$0")"
+cd "$d" &&
+curl https://data.cdc.gov/api/views/y5bj-9g5w/rows.csv?accessType=DOWNLOAD >Weekly_Counts_of_Deaths_by_Jurisdiction_and_Age.csv &&
 curl https://data.cdc.gov/api/views/xkkf-xrst/rows.csv?accessType=DOWNLOAD >Excess_Deaths_Associated_with_COVID-19.csv &&
-mv eall.png eall.old.png &&
-mv e.png e.old.png &&
-./process.py 2020-02-02 && mv e.png eall.png &&
-./process.py &&
+./all_ages.py 2020-04-26 "all_ages.longterm.png" &&
+./all_ages.py 2020-02-02 "all_ages.full.png" &&
 : || exit 1

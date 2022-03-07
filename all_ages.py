@@ -14,11 +14,9 @@ weighted = True
 # deaths ('Average Expected Count')
 baseline = 'Average Expected Count'
 
-# Do age adjustment or not
-do_age_adjust = True
-
 # Calculate excess deaths since the week starting on... (must be a Sunday)
 start_date = sys.argv[1] if len(sys.argv) > 1 else '2020-04-26'
+output = sys.argv[2] if len(sys.argv) > 2 else 'e.png'
 
 # U.S. Census Bureau’s population estimates for US states and DC, as of 2019.
 # Source:
@@ -76,63 +74,6 @@ pop = {
         'West Virginia':1792147,
         'Wisconsin':5822434,
         'Wyoming':578759,
-}
-
-# Mean age of COVID deaths per state, from calc_age_of_deaths.py
-mean_age_of_covid_deaths = {
-  # Data as of 02/16/2022
-  'Alaska': 68.4322033898305,
-  'District of Columbia': 69.34827182190978,
-  'Hawaii': 69.3898931799507,
-  'Texas': 69.76863481558416,
-  'New Mexico': 69.77740719257541,
-  'Puerto Rico': 70.01070663811564,
-  'Nevada': 70.669473789117,
-  'Georgia': 70.8611710375514,
-  'Utah': 71.13448056086679,
-  'Mississippi': 71.1884739055157,
-  'Alabama': 71.21794508113015,
-  'Arizona': 71.32640442821811,
-  'Louisiana': 71.53041955641008,
-  'Tennessee': 71.62596891016138,
-  'California': 72.09816374430484,
-  'South Carolina': 72.38316450189546,
-  'Oklahoma': 72.51854599406528,
-  'Arkansas': 72.76708984375,
-  'Florida': 72.94673064918851,
-  'North Carolina': 73.06145170017064,
-  'Kentucky': 73.2342118174809,
-  'Washington': 73.44950376768976,
-  'West Virginia': 73.51540616246498,
-  'Oregon': 73.83056719303899,
-  'Wyoming': 73.8671096345515,
-  'Michigan': 73.93562037935303,
-  'Colorado': 73.97524833757491,
-  'Montana': 74.15845395749923,
-  'Missouri': 74.288857478131,
-  'Maryland': 74.37345467032966,
-  'Idaho': 74.38178462874511,
-  'Virginia': 74.47804368685443,
-  'Kansas': 74.8355623100304,
-  'Illinois': 74.84165944003965,
-  'Delaware': 74.95607476635514,
-  'Indiana': 75.04105316269896,
-  'New York': 75.19784041263023,
-  'New Jersey': 75.21680150761932,
-  'Nebraska': 75.26056649701262,
-  'Ohio': 75.26812200502016,
-  'Maine': 75.59683177153056,
-  'South Dakota': 75.8833392163784,
-  'Wisconsin': 75.97600260605184,
-  'North Dakota': 76.3614360629286,
-  'Pennsylvania': 76.43754887079712,
-  'Minnesota': 76.93167624281789,
-  'Iowa': 76.96844038739842,
-  'Vermont': 77.27611940298507,
-  'Connecticut': 78.00512445095168,
-  'New Hampshire': 78.03200692041523,
-  'Rhode Island': 78.42136323399232,
-  'Massachusetts': 78.65621031975067,
 }
 
 # Party of governors, as of 01-Jan-2022
@@ -221,14 +162,6 @@ def excess_for(df, state):
     ret += _excess_for(df, 'New York City') if state == 'New York' else 0
     return ret
 
-def age_adjust(state):
-    if not do_age_adjust:
-        return 1
-    # The IFR of COVID-19 increases approximately 1.115-fold with each year of
-    # increase in age
-    ifr_inc = 1.115
-    return ifr_inc**(74 - mean_age_of_covid_deaths[state])
-
 def chart(res, last):
     # res is an array of (state, excess_per_M) tuples
     # "Tableau 20" colors
@@ -260,28 +193,23 @@ def chart(res, last):
     ax.spines['right'].set_visible(False)
     ax.tick_params(axis='y', which='both', left=False)
     ax.set_xlabel('Excess deaths per million people')
-    xtra = ' (Age-Adjusted)' if do_age_adjust else ''
-    ax.set_title(f'Cumulative Excess Deaths per Capita{xtra}\n'
+    ax.set_title(f'Cumulative Excess Deaths per Capita\n'
             f'Since {start_date}', fontsize='x-large', x=.35)
-    xtra = 'Age-adjustment is performed by normalizing each state\'s '\
-            'excess deaths to what they would be\nif the mean '\
-            'age of COVID deaths was 74 in all states.' if do_age_adjust else ''
     fig.text(-.09, .06,
             'Source: https://github.com/mbevand/excess-deaths  '
             'Created by: Marc Bevand — @zorinaq\n'
             'Colors represent party of state governor as of 2022-01-01 '
             '(blue for democrat, red for republican)\n'
             f'Excess mortality calculated from week starting {start_date} '
-            f'up to week ending {last}.\n'
-            f'{xtra}',
+            f'up to week ending {last}.\n',
             va='top', ha='left',
             bbox=dict(facecolor='white', edgecolor='none'))
-    fig.savefig('e.png', bbox_inches='tight')
+    fig.savefig(output, bbox_inches='tight')
 
 def main():
     # Excess death data. Source:
     # https://data.cdc.gov/NCHS/Excess-Deaths-Associated-with-COVID-19/xkkf-xrst/
-    df = pd.read_csv('data.csv')
+    df = pd.read_csv('Excess_Deaths_Associated_with_COVID-19.csv')
     # A short description of the most important columns in the CSV file:
     # - Observed Number: observed number of deaths
     # - Upper Bound Threshold: upper bound of 95% prediction interval of
@@ -297,7 +225,7 @@ def main():
     res = []
     for st in pop.keys():
         # calculate cumulative excess deaths per million capita
-        res.append((st, excess_for(df, st) / pop[st] * 1e6 * age_adjust(st)))
+        res.append((st, excess_for(df, st) / pop[st] * 1e6))
     res = sorted(res, key=lambda x: x[1])
     for x in res:
         print(f'{x[1]:.0f} {x[0]}')
