@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 from matplotlib import rcParams
 
 # Expected deaths for a given week can be calculated using 1 of 2 techniques:
@@ -295,6 +296,7 @@ def chart_group(group, l):
     ax.set_ylim(bottom=-1, top=len(ys))
     ax.set_xlim(left=min([0] + ys))
     ax.tick_params(axis='y', which='both', left=False)
+    ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos=None: f'{x:,.0f}'))
     ax.set_xlabel('Excess deaths per million people')
     ax.set_title(f'Cumulative Excess Deaths per Capita\n'
             f'For Age Group "{group}"',
