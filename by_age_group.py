@@ -322,10 +322,11 @@ def chart():
             print(f'{epm:5.0f} excess/1M {jurisdiction:20} {obs - exp:7.0f} excess')
         chart_group(g, my_excess[g])
 
-def comp_cdc():
+def output_csv():
     f = open('by_age_group.csv', 'w')
     f.write('Jurisdiction,Excess (CDC reference),Excess,Difference Percent,'
-    'Excess Under 25,Excess 25-44,Excess 45-64,Excess 65-74,Excess 75-84,Excess 85+\n')
+    'Excess Under 25,Excess 25-44,Excess 45-64,Excess 65-74,Excess 75-84,Excess 85+,'
+    'Pop Under 25,Pop 25-44,Pop 45-64,Pop 65-74,Pop 75-84,Pop 85+\n')
     for (epm, obs, exp, jurisdiction) in sorted(my_excess['all'], key=lambda x: -cdc_excess[x[3]]):
         cdc = cdc_excess[jurisdiction]
         our = round(obs - exp)
@@ -336,6 +337,8 @@ def comp_cdc():
             if ff:
                 _, obs, exp, _ = ff[0]
                 f.write(f'{obs - exp:.0f}')
+        for group in ('Under 25 years', '25-44 years', '45-64 years', '65-74 years', '75-84 years', '85 years and older'):
+            f.write(f',{pop[jurisdiction][group]}')
         f.write('\n')
     f.close()
 
@@ -349,7 +352,7 @@ def main():
     else:
         my_excess = json.load(open(cache))
     load_cdc_official()
-    comp_cdc()
+    output_csv()
     chart()
 
 main()
