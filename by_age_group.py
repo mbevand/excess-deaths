@@ -342,6 +342,21 @@ def output_csv():
         f.write('\n')
     f.close()
 
+def overall_by_party():
+    for group in reversed(('Under 25 years', '25-44 years', '45-64 years', '65-74 years', '75-84 years', '85 years and older', 'all')):
+        print(f'{group}: ', end='')
+        stats = { 'republican': [0, 0, 0], 'democrat': [0, 0, 0] }
+        for (epm, obs, exp, jurisdiction) in my_excess[group]:
+            if jurisdiction not in party:
+                continue
+            stats[party[jurisdiction]][0] += pop[jurisdiction][group]
+            stats[party[jurisdiction]][1] += obs
+            stats[party[jurisdiction]][2] += exp
+        for p in ('republican', 'democrat'):
+            excess = stats[p][1] - stats[p][2]
+            print(f'{excess / stats[p][0] * 1e6:,.0f}{" / " if p == "republican" else ""}', end='')
+        print()
+
 def main():
     global my_excess
     init()
@@ -353,6 +368,7 @@ def main():
         my_excess = json.load(open(cache))
     load_cdc_official()
     output_csv()
+    #overall_by_party()
     chart()
 
 main()
