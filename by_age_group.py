@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, json, time, math, datetime
+import os, json, time, math, datetime, sys
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -47,6 +47,8 @@ cdc_excess = {}
 #   ...
 # }
 pop = {}
+
+highlight = None
 
 # Party of governors, as of 01-Jan-2022
 party = {
@@ -239,6 +241,9 @@ def parse_pop():
     }
 
 def init():
+    global highlight
+    if len(sys.argv) > 1:
+        highlight = sys.argv[1]
     get_all_weeks()
     parse_pop()
 
@@ -287,7 +292,8 @@ def chart_group(group, l):
         ys = [math.nan] * len(missing) + ys
         states = sorted(list(missing), reverse=True) + states
         colors = ['black'] * len(missing) + colors
-    ax.barh(states, ys, color=colors)
+    y_pos = range(len(ys))
+    ax.barh(y_pos, ys, tick_label=states, color=colors)
     for (i, y) in enumerate(ys):
         if math.isnan(y):
             ax.text(0, i - .07, f'N/A (insufficient data)', va='center')
@@ -301,6 +307,10 @@ def chart_group(group, l):
     ax.set_title(f'Cumulative Excess Deaths per Capita\n'
             f'For Age Group "{group}"',
             fontsize='x-large', x=.35)
+    for (i, jurisdiction) in enumerate(states):
+        if highlight and jurisdiction.endswith(highlight):
+            t = ax.get_yticklabels()[i]
+            t.set_color('red')
     for sp in ax.spines:
         ax.spines[sp].set_visible(False)
     fig.text(-.09, .06,
