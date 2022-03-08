@@ -324,7 +324,7 @@ def comp_cdc():
     f = open('by_age_group.csv', 'w')
     f.write('Jurisdiction,CDC Excess,Our Excess,Difference Percent,Our Excess Under 25,Our Excess 25-44,'
             'Our Excess 45-64,Our Excess 65-74,Our Excess 75-84,Our Excess 85+\n')
-    for (epm, obs, exp, jurisdiction) in my_excess['all']:
+    for (epm, obs, exp, jurisdiction) in sorted(my_excess['all'], key=lambda x: -cdc_excess[x[3]]):
         cdc = cdc_excess[jurisdiction]
         our = round(obs - exp)
         f.write(f'{jurisdiction},{cdc},{our},{((our / cdc) - 1) * 100}')
