@@ -284,7 +284,7 @@ def chart_group(group, l):
     missing = set(pop.keys()) - set([_[3] for _ in l])
     if missing:
         ys = [math.nan] * len(missing) + ys
-        states = list(missing) + states
+        states = sorted(list(missing), reverse=True) + states
         colors = ['black'] * len(missing) + colors
     ax.barh(states, ys, color=colors)
     for (i, y) in enumerate(ys):
