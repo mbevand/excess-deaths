@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, json, time, math
+import os, json, time, math, datetime
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -104,6 +104,10 @@ party = {
 def debug(s, end=None):
     return
     print(s, end=end)
+
+def fmt(d):
+    '''Parse a mm/dd/yyyy date and format it yyyy-mm-dd'''
+    return datetime.datetime.strptime(d, '%m/%d/%Y').strftime('%Y-%m-%d')
 
 def add_my(res, group, obs, exp, jurisdiction):
     if group not in res:
@@ -297,8 +301,8 @@ def chart_group(group, l):
             'Created by: Marc Bevand — @zorinaq\n'
             'Colors represent party of state governor as of 2022-01-01 '
             '(blue for democrat, red for republican)\nExcess mortality calculated '
-            f'from week ending {all_weeks_info[pandemic_start_week]["end"]} '
-            f'up to week ending {all_weeks_info[all_weeks[-1]]["end"]}',
+            f'from week ending {fmt(all_weeks_info[pandemic_start_week]["end"])} '
+            f'up to week ending {fmt(all_weeks_info[all_weeks[-1]]["end"])}',
             va='top', ha='left',
             bbox=dict(facecolor='white', edgecolor='none'))
     fig.savefig(f'by_age_group.{group}.png', bbox_inches='tight')
