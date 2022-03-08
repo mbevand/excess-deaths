@@ -371,7 +371,7 @@ def main():
     global my_excess
     init()
     cache = 'cache.by_age_group.json'
-    if not os.path.exists(cache) or time.time() - os.path.getmtime(cache) > 3600:
+    if not os.path.exists(cache) or time.time() - os.path.getmtime(cache) > 12 * 3600:
         my_excess = calc_excess()
         json.dump(my_excess, open(cache, 'w'))
     else:
