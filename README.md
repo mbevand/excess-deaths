@@ -39,27 +39,27 @@ a difference of only -1.29%.
 
 ### Ages 85+
 
-![by_age_group.85 years and older.png](by_age_group.85 years and older.png)
+![by_age_group.85 years and older.png](by_age_group.85%20years%20and%20older.png)
 
 ### Ages 75-84
 
-![by_age_group.75-84 years.png](by_age_group.75-84 years.png)
+![by_age_group.75-84 years.png](by_age_group.75-84%20years.png)
 
 ### Ages 65-74
 
-![by_age_group.65-74 years.png](by_age_group.65-74 years.png)
+![by_age_group.65-74 years.png](by_age_group.65-74%20years.png)
 
 ### Ages 45-64
 
-![by_age_group.45-64 years.png](by_age_group.45-64 years.png)
+![by_age_group.45-64 years.png](by_age_group.45-64%20years.png)
 
 ### Ages 25-44
 
-![by_age_group.25-44 years.png](by_age_group.25-44 years.png)
+![by_age_group.25-44 years.png](by_age_group.25-44%20years.png)
 
 ### Ages under 25
 
-![by_age_group.Under 25 years.png](by_age_group.Under 25 years.png)
+![by_age_group.Under 25 years.png](by_age_group.Under%2025%20years.png)
 
 ### All ages
 
