@@ -261,7 +261,12 @@ def load_cdc_official():
     df = df[df['Outcome'] == 'All causes']
     df = df[df['Type'] == 'Predicted (weighted)']
     for st in sorted(set(df['State'])):
-        e = float(df[df['State'] == st].iloc[0]['Total Excess Estimate'])
+        e = int(df[df['State'] == st].iloc[0]['Total Excess Estimate'])
+        if st in ('New York', 'New York City'):
+            # merge "New York City" and "New York"
+            st = 'New York'
+            if st in cdc_excess:
+                e += cdc_excess[st]
         cdc_excess[st] = e
 
 def chart_group(group, l):
@@ -315,6 +320,24 @@ def chart():
             print(f'{epm:5.0f} excess/1M {jurisdiction:20} {obs - exp:7.0f} excess')
         chart_group(g, my_excess[g])
 
+def comp_cdc():
+    f = open('by_age_group.csv', 'w')
+    f.write('Jurisdiction,CDC Excess,Our Excess,Difference Percent,Our Excess Under 25,Our Excess 25-44,'
+            'Our Excess 45-64,Our Excess 65-74,Our Excess 75-84,Our Excess 85+\n')
+    for (epm, obs, exp, jurisdiction) in my_excess['all']:
+        cdc = cdc_excess[jurisdiction]
+        our = round(obs - exp)
+        f.write(f'{jurisdiction},{cdc},{our},{((our / cdc) - 1) * 100}')
+        for group in ('Under 25 years', '25-44 years', '45-64 years', '65-74 years', '75-84 years', '85 years and older'):
+            ff = list(filter(lambda x: x[3] == jurisdiction, my_excess[group]))
+            if ff:
+                _, obs, exp, _ = ff[0]
+                f.write(f',{obs - exp:.0f}')
+            else:
+                f.write(',')
+        f.write('\n')
+    f.close()
+
 def main():
     global my_excess
     init()
@@ -325,6 +348,7 @@ def main():
     else:
         my_excess = json.load(open(cache))
     load_cdc_official()
+    comp_cdc()
     chart()
 
 main()
