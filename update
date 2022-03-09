@@ -1,6 +1,16 @@
 #!/bin/sh
 
 echo Update CDC Excess Deaths
+now=$(date +%s) || exit 1
+mod=$(stat --format=%Y by_age_group.all.old.png || echo 0)
+if [ ! -e by_age_group.all.old.png -o $(($now - $mod)) -gt $((24 * 3600)) ]; then
+    for f in *.png; do
+	case "$f" in
+	    *.old.png) :;;
+	    *) echo "back up $f"; cp "$f" "${f%.png}.old.png" || exit 1;;
+	esac
+    done
+fi
 d="$(dirname "$0")"
 cd "$d" &&
 curl https://data.cdc.gov/api/views/y5bj-9g5w/rows.csv?accessType=DOWNLOAD >Weekly_Counts_of_Deaths_by_Jurisdiction_and_Age.csv &&
@@ -8,4 +18,5 @@ curl https://data.cdc.gov/api/views/xkkf-xrst/rows.csv?accessType=DOWNLOAD >Exce
 #curl https://www2.census.gov/programs-surveys/popest/datasets/2010-2020/state/asrh/SC-EST2020-AGESEX-CIV.csv >Population.csv &&
 ./all_ages.py 2020-04-26 "all_ages.longterm.png" &&
 ./all_ages.py 2020-02-02 "all_ages.full.png" &&
+./by_age_group.py &&
 : || exit 1
