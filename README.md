@@ -1,4 +1,4 @@
-*Updated: 08 Mar 2022*
+*Updated: 09 Mar 2022*
 
 Author: Marc Bevand
 
@@ -34,8 +34,8 @@ age group.
 **Raw numerical output of our model: [by_age_group.csv](by_age_group.csv)**
 
 As this CSV shows, our model produces figures close to the CDC. As of week ending
-2022-02-19, the CDC estimates 1,078,226 excess deaths, while our model estimates 1,064,325,
-a difference of only -1.29%. Our model tends to produce excess death estimates slightly
+2022-02-26, the CDC estimates 1,088,800 excess deaths, while our model estimates 1,075,709,
+a difference of only -1.20%. Our model tends to produce excess death estimates slightly
 below the CDC's estimates because their model ignores deficits of deaths (["Negative
 values, where the observed count fell below the thresholds, were set to
 zero"](https://www.cdc.gov/nchs/nvss/vsrr/covid19/excess_deaths.htm)).
