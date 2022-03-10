@@ -192,7 +192,8 @@ def analyze_jurisdiction(res, df, jurisdiction):
 
 def get_all_weeks():
     # Get the list of all weeks defined in the dataset
-    df = pd.read_csv('Weekly_Counts_of_Deaths_by_Jurisdiction_and_Age.csv')
+    df = pd.read_csv('Weekly_Counts_of_Deaths_by_Jurisdiction_and_Age.csv',
+            usecols=['Type', 'Jurisdiction', 'Age Group', 'Week Ending Date', 'Year', 'Week'])
     mask = df['Type'] == 'Predicted (weighted)'
     mask &= df['Jurisdiction'] == 'United States'
     mask &= df['Age Group'] == '85 years and older'
