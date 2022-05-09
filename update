@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 echo Update CDC Excess Deaths
 d="$(dirname "$0")"
 cd "$d" || exit 1
@@ -13,8 +15,8 @@ if [ ! -e by_age_group.all.old.png -o $(($now - $mod)) -gt $((24 * 3600)) ]; the
 	esac
     done
 fi
-curl https://data.cdc.gov/api/views/y5bj-9g5w/rows.csv?accessType=DOWNLOAD >Weekly_Counts_of_Deaths_by_Jurisdiction_and_Age.csv &&
-curl https://data.cdc.gov/api/views/xkkf-xrst/rows.csv?accessType=DOWNLOAD >Excess_Deaths_Associated_with_COVID-19.csv &&
+curl --show-error https://data.cdc.gov/api/views/y5bj-9g5w/rows.csv?accessType=DOWNLOAD >Weekly_Counts_of_Deaths_by_Jurisdiction_and_Age.csv &&
+curl --show-error https://data.cdc.gov/api/views/xkkf-xrst/rows.csv?accessType=DOWNLOAD >Excess_Deaths_Associated_with_COVID-19.csv &&
 #curl https://www2.census.gov/programs-surveys/popest/datasets/2010-2020/state/asrh/SC-EST2020-AGESEX-CIV.csv >Population.csv &&
 ./all_ages.py 2020-04-26 "all_ages.longterm.png" &&
 ./all_ages.py 2020-02-02 "all_ages.full.png" &&
